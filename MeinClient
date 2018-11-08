@@ -1,0 +1,52 @@
+package MeinClient;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+import MeinServer.MeinServer;
+
+public class MeinClient {
+
+	public static void main(String[] args) {
+		MeinClient client = new MeinClient("localhost", 8000);
+		client.sendMessag("Gutent Tag Frau Server, wie geht es Ihnen?");
+	}
+	
+	private InetSocketAddress adress;
+	
+	public MeinClient(String adress, int port) {
+		this.adress = new InetSocketAddress(adress, port);
+	}
+	
+	public void sendMessag (String msg) {
+		
+		
+		
+		try {
+			System.out.println("(Client) Verbinde zu Server...");
+			Socket socket = new Socket();
+			socket.connect(adress, 5000);
+			System.out.println("(Client) Verbunden...");
+			
+			System.out.println("(Client) Sende Nachricht");			
+			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+			
+			pw.println(msg);
+			pw.flush();
+			
+			System.out.println("(Client) Nachricht gesendet...");
+			
+			// Verbindung schliessen
+			pw.close();
+			socket.close();
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
